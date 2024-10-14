@@ -1,19 +1,21 @@
-#include <iostream>
+#include "commondef.hpp"
+
 #include <sys/epoll.h>
 #include <unistd.h>
+
 #include <functional>
+#include <iostream>
 #include <queue>
 #include <unordered_map>
 #include <vector>
-#include "commondef.hpp"
 class EpollContext
 {
-public:
+  public:
     int create()
     {
         return epoll_fd = epoll_create1(0);
     }
-    void ~EpollContext()
+    ~EpollContext()
     {
         ::close(epoll_fd);
     }
@@ -37,7 +39,6 @@ public:
     }
     void processEvents(int n)
     {
-
         for (int i = 0; i < n; ++i)
         {
             int fd = events[i].data.fd;
@@ -48,7 +49,7 @@ public:
         }
     }
 
-private:
+  private:
     int epoll_fd;
     std::vector<struct epoll_event> events{16};
     std::unordered_map<int, EventHandler> handlers;
