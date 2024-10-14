@@ -63,8 +63,14 @@ struct ContextImpl
     std::deque<EventHandler> message_queue;
     std::stop_source stopSource;
 };
+
+#if defined(__APPLE__)
 #include "kqueue.hpp"
 using Context = ContextImpl<KqueueContext>;
+#elif defined(__linux__)
+#include "epoll.hpp"
+using Context = ContextImpl<EpollContext>;
+#endif
 #ifdef TEST
 
 int main()
